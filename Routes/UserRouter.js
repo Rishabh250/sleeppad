@@ -11,6 +11,11 @@ userRouters.get("/user_check_connection",userController.check_connection);
 userRouters.post("/userRegistration",userController.userRegistration);
 userRouters.post("/userLogin",userController.userLogin);
 userRouters.post("/sendOTP",userController.sendOTP);
+userRouters.post("/uploadDataForSleep",userController.uploadDataForSleep);
+
+
+
+userRouters.get("/fetchDataForSleep",userController.fetchDataForSleep);
 
 
 export default userRouters;

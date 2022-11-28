@@ -70,7 +70,9 @@ var userController = {
         try {
 
             let findUser = await User.findOne({email:req.body.email});
-            
+            if(!findUser){
+                return res.status(404).json({error : `User not found`})
+            }
             var token = jwt.sign({
                 email : findUser.email
             },keys.TOKEN_KEY)
@@ -88,6 +90,10 @@ var userController = {
                 return res.status(404).json({msg : "Need Token"});
             }
             var fetchUser = await getUser(req.headers["access-token"]);
+            
+            if(!fetchUser){
+                return res.status(404).json({error : `User not found`})
+            }
             var otp =  generateRandomNumber();
 
             var time = new Date();
@@ -106,6 +112,76 @@ var userController = {
             
         }
     },
+
+    uploadDataForSleep : async(req,res)=>{
+        try {
+
+            if(!req.headers["access-token"]){
+                return res.status(404).json({msg : "Need Token"});
+            }
+        
+            var findUser = await getUser(req.headers["access-token"]);
+
+
+            if(findUser){
+                
+                var stateData = 
+                {
+                    stateTime: req.body.stateTime,
+                    state: req.body.state
+                } 
+                
+                var dataForBreath = 
+                        {
+                            breathValue: req.body.breathValue,
+                        }
+                    
+                var dataForHeart = 
+                        {
+                            heartValue: req.body.heartValue,
+                        }  
+                        
+                var dataForTurnOver = 
+                        {
+                            turnOverValue: req.body.turnOverValue,
+                        }
+
+
+                var sleepData = {
+                    dataForSleep : stateData,
+                    dataForBreath : dataForBreath,
+                    dataForHeart : dataForHeart,
+                    dataForTurnOver : dataForTurnOver,
+                }
+                findUser.sleepData.push(sleepData)
+                await findUser.save()
+                return res.status(200).json({msg : "Sleep Data Added",data : findUser});
+            }
+            else{
+                 return res.status(404).json({error : `User not found`})
+            } 
+            
+        } catch (error) {
+            return res.status(403).json({error : `Sleep Data ${error}`})
+            
+        }
+    },
+
+    fetchDataForSleep : async(req,res)=>{
+        try {
+            if(!req.headers["access-token"]){
+                return res.status(404).json({msg : "Need Token"});
+            }
+
+            var findUser = await getUser(req.headers["access-token"]);
+            return res.status(200).json({sleepData : findUser.sleepData})
+            
+        } catch (error) {
+            return res.status(403).json({error : `Unable to Fetch Sleep Data ${error}`})
+            
+        }
+
+    }
 
 
 }
