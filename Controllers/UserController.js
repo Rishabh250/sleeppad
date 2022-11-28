@@ -47,7 +47,7 @@ var userController = {
             var findEmail = await User.findOne({email: req.body.email});
 
             if(findEmail){
-                return res.status(201).json({error : `Account Already Exist ${req.body.email}`})
+                return res.status(201).json({error : `Account Already Exist`})
             }
             
 
