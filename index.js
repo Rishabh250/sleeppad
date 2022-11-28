@@ -3,9 +3,10 @@ import cors from 'cors';
 import express from 'express';
 import connection from "./public/DB_Connection/DB_Connection.js";
 import userRouter from "./Routes/UserRouter.js";
+
 const app = express();
 connection();
-let Port = 2504;
+let Port = process.env.PORT || 2504;
 app.use(cors());
 
 app.use(bodyParser.urlencoded({extended:true}));
