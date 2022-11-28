@@ -86,10 +86,12 @@ var userController = {
 
     sendOTP : async(req,res)=>{
         try {
-            if(!req.headers["access-token"]){
-                return res.status(404).json({msg : "Need Token"});
+
+            if(!req.body.email){
+                return res.status(404).json({msg : "Field can't be empty"});
             }
-            var fetchUser = await getUser(req.headers["access-token"]);
+           
+            var fetchUser = await User.findOne({email : req.body.email})
             
             if(!fetchUser){
                 return res.status(404).json({error : `User not found`})
