@@ -114,6 +114,41 @@ var userController = {
             
         }
     },
+    verifyOTP : async(req,res)=>{
+        try{
+            if(!req.body.email){
+                return res.status(404).json({msg : "Field can't be empty"});
+            }
+            var time = new Date();
+            var fetchUser = await User.findOne({email : req.body.email})
+
+            if(parseInt(time.getTime()) <= parseInt(fetchUser.otpExpireTime)){
+
+                bcrypt.compare(req.body.otp.toString(),fetchUser.otp,async(err,result)=>{
+                    if(result){
+                        await fetchUser.updateOne({$unset : {otp : fetchUser.otp, otpExpireTime : fetchUser.otpExpireTime}})
+                        fetchUser.save();
+                        return res.status(200).json({otpStatus : "OTP Verified"})
+                    }
+                    else{
+                        return res.status(401).json({otpStatus : "Wrong OTP"})  
+                    }
+                });                    
+               
+
+            }
+            else{
+                await fetchUser.updateOne({$unset : {otp : fetchUser.otp, otpExpireTime : fetchUser.otpExpireTime}})
+                fetchUser.save();
+              return res.status(400).json({otpStatus : "OTP Expire"})  ;
+                
+            }
+        }
+        catch (error) {
+            return res.status(403).json({error : `Unable to verify otp`})
+            
+        }
+    },
 
     uploadDataForSleep : async(req,res)=>{
         try {
