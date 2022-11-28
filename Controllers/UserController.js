@@ -127,6 +127,7 @@ var userController = {
 
                 bcrypt.compare(req.body.otp.toString(),fetchUser.otp,async(err,result)=>{
                     if(result){
+                        console.log(result)
                         await fetchUser.updateOne({$unset : {otp : fetchUser.otp, otpExpireTime : fetchUser.otpExpireTime}})
                         fetchUser.save();
                         return res.status(200).json({otpStatus : "OTP Verified"})

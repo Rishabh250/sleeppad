@@ -7,6 +7,7 @@ var userSchema = new Schema({
     lastName : {type : String},
     email : {type : String,required:true},
     otp : {type : String},
+    otpExpireTime : {type : String},
     sleepData : [
         {
             time : {type:String,default : Date.now()},
