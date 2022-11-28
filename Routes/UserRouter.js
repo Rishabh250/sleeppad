@@ -12,6 +12,7 @@ userRouters.post("/userRegistration",userController.userRegistration);
 userRouters.post("/userLogin",userController.userLogin);
 userRouters.post("/sendOTP",userController.sendOTP);
 userRouters.post("/uploadDataForSleep",userController.uploadDataForSleep);
+userRouters.post("/verifyOTP",userController.verifyOTP);
 
 
 

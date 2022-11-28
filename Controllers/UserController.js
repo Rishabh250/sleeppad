@@ -114,6 +114,7 @@ var userController = {
             
         }
     },
+    
     verifyOTP : async(req,res)=>{
         try{
             if(!req.body.email){
